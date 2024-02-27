@@ -25,8 +25,7 @@ Case Warnings have been disabled in this project. If you want to include them re
 
 ### Dev
 
-A merge into the dev branch will trigger the dev build pipeline.
-In my environment, if it completes successfully the dev release pipeline will be triggered.
+The dev pipeline will run the build and stage files. There is also a documentation job that will run the python script to generate the diagrams and copy the files to blob storage to be shared as a static website.
 
 I have similar setup for my main branch to deploy to a uat and prod environment.
 
@@ -35,6 +34,11 @@ I have similar setup for my main branch to deploy to a uat and prod environment.
 ### Diagram
 
 [Database Diagram](http://localhost:8080/) TODO: Update link to the static site for your blob storage
+
+### AdventureWorks
+
+Checkout the feature/AdventureWorks branch to see an example of how this project can be used. I used Azure Data Studio to update my database project with the schema of the AdventureWorks database. I switched back over to my VSCode and opened the documentation/diagram/diagram.py script and ran in the debugger. This generated the html files in the documentation folder and the lib folder that has the javascript that supports the pages.
+![AdventureWorks Diagram](./documentation/Images/Screenshot%202024-02-26%20at%209.25.58 PM.png)
 
 ## Pull changes in from existing database
 
