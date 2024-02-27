@@ -1,0 +1,12 @@
+#This pipeline will build the dacpac and is run for branches starting with feature/ and bugfix/
+trigger:
+  - feature/*
+  - bugfix/*
+pool:
+  name: Azure Pipelines
+steps:
+  - task: DotNetCoreCLI@2
+    displayName: "dotnet build"
+    inputs:
+      projects: "**/*.sqlproj"
+      arguments: "/p:SystemDacpacsLocation=$(agent.builddirectory)"
