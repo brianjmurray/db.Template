@@ -1,0 +1,59 @@
+#This pipeline will build the dacpac and copy it to the artifact staging directory
+#The documentation job will run the diagram.py script and upload the generated files to the blob storage
+trigger:
+  branches:
+    include:
+      - dev
+  paths:
+    exclude:
+      - README.md
+
+pool:
+  vmImage: windows-latest
+
+stages:
+  - stage: Build
+    displayName: Build stage
+    jobs:
+      - job: Build
+        steps:
+          - task: DotNetCoreCLI@2
+            displayName: "dotnet build"
+            inputs:
+              projects: "**/*.sqlproj"
+              arguments: "/p:SystemDacpacsLocation=$(agent.builddirectory)"
+
+          - task: CopyFiles@2
+            displayName: "Copy Files to: $(build.artifactstagingdirectory)"
+            inputs:
+              SourceFolder: "$(agent.builddirectory)"
+              Contents: 'D:\a\1\s\bin\Debug\*.dacpac'
+              TargetFolder: "$(build.artifactstagingdirectory)"
+
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish Artifact: DACPAC"
+            inputs:
+              ArtifactName: DACPAC
+
+      - job: Documentation
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: "3.x"
+              addToPath: true
+
+          - script: |
+              python -m pip install --upgrade pip
+              pip install -r $(Build.SourcesDirectory)/documentation/Diagram/requirements.txt
+            displayName: "Install dependencies from requirements.txt"
+
+          - script: |
+              python $(Build.SourcesDirectory)/documentation/Diagram/diagram.py
+            displayName: "Run documentation script"
+          - task: AzurePowerShell@5
+            displayName: "Copy to diagram pages to Blob"
+            inputs:
+              azureSubscription: "EmbraceSubReleases"
+              ScriptType: "InlineScript"
+              Inline: 'az storage blob upload-batch --account-name "$(storageAccount)" --destination $(web) --destination-path $(path) --pattern * --source "$(Build.SourcesDirectory)/documentation/" --connection-string "$(connectionString)" --overwrite'
+              azurePowerShellVersion: "LatestVersion"
