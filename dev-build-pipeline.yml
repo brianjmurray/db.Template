@@ -53,7 +53,8 @@ stages:
           - task: AzurePowerShell@5
             displayName: "Copy to diagram pages to Blob"
             inputs:
-              azureSubscription: "EmbraceSubReleases"
+              #You can also specify the service connection here if that's how you have devops setup.
+              azureSubscription: "$(azureSubscription)"
               ScriptType: "InlineScript"
               Inline: 'az storage blob upload-batch --account-name "$(storageAccount)" --destination $(web) --destination-path $(path) --pattern * --source "$(Build.SourcesDirectory)/documentation/" --connection-string "$(connectionString)" --overwrite'
               azurePowerShellVersion: "LatestVersion"

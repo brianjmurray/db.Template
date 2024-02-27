@@ -16,16 +16,19 @@ This is a database project to track changes to schema of your database and inclu
 ## Build and Test
 
 In the database projects extension, right-click on the top of the database project tree and select Build.
-You should see the build process running in the Output tab. If there are any errors you'll see the count at the end of the output. You cna ctrl/cmd+click on the links to any of the files in the project to open and correct the issue.
-![Alt text](Images\BuildErrorExample.png)
-Keep in mind a single error in a file can have a cascading affect. An error in a file that defines a table can cause errors in other files that reference that table. For example an error in the Support.User table definition can result in errors for all of the tables that have foreign keys to that table which is just about everything. Make small changes and build often.
+You should see the build process running in the Output tab. If there are any errors you'll see the count at the end of the output. You can ctrl/cmd+click on the links to any of the files in the project to open and correct the issue.
+Keep in mind a single error in a file can have a cascading affect. An error in a file that defines a table can cause errors in other files that reference that table. Make small changes and build often.
+Case Warnings have been disabled in this project. If you want to include them remove the following line from the sqlproj file.
+`<SuppressTSqlWarnings>71558</SuppressTSqlWarnings>`
 
 ## CI\CD
 
 ### Dev
 
 A merge into the dev branch will trigger the dev build pipeline.
-If it completes successfully the dev release pipeline will be triggered.
+In my environment, if it completes successfully the dev release pipeline will be triggered.
+
+I have similar setup for my main branch to deploy to a uat and prod environment.
 
 ## Documentation
 
