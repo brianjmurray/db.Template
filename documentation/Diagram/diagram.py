@@ -10,6 +10,9 @@ import community as cmt
 from pyvis.network import Network
 import random
 
+# Set Database Name
+database_name = "AdventureWorks"
+
 # Ignore specific schemas
 ignored_folders = ['dbo', 'documentation',
                    'etl', 'History', 'lib', 'xsec']
@@ -22,9 +25,11 @@ if azure_build:
     base_path = os.environ['BUILD_SOURCESDIRECTORY']
 else:
     # This assumes the script is located in the documentation/Diagram directory
-    base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+    base_path = os.path.abspath(os.path.join(
+        os.path.dirname(__file__), '..', '..'))
 
 documentation_folder = os.path.join(base_path, 'documentation')
+
 
 def interactive_plot(graph, table_definition, schema_colors=None, schema_name=None):
     """
@@ -90,13 +95,13 @@ def interactive_plot(graph, table_definition, schema_colors=None, schema_name=No
 
     if schema_name is not None:
         # Save the graph to a separate HTML file
-        filename = f"{documentation_folder}/EmbraceDiagram_{schema_name}.html"
+        filename = f"{documentation_folder}/{database_name}_{schema_name}.html"
     else:
-        filename = f"{documentation_folder}/EmbraceDiagram.html"
+        filename = f"{documentation_folder}/{database_name}.html"
 
     nt.show(filename)
 
-    #print that file was created
+    # print that file was created
     print(f"Created {filename}")
 
 
@@ -233,7 +238,7 @@ def generate_index_html(schemas):
 </head>
 <body>
     <h1>Overall Diagrams</h1>
-    <ul><li><a href="EmbraceDiagram.html">Overall Schema Diagram</a></li></ul>
+    <ul><li><a href="{database_name}.html">Overall Schema Diagram</a></li></ul>
     <h1>Schema Diagrams</h1>
     <ul>
 """
@@ -243,7 +248,7 @@ def generate_index_html(schemas):
 
         # Generate a list item for each schema diagram
         for schema in schemas:
-            content += f'        <li><a href="EmbraceDiagram_{schema}.html">{schema} Schema Diagram</a></li>\n'
+            content += f'        <li><a href="{database_name}_{schema}.html">{schema} Schema Diagram</a></li>\n'
 
         # End of the HTML content
         content += """

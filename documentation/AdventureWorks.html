@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 1080px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#F99ACB", "id": "Sales.Customer", "label": "Sales.Customer", "shape": "box", "size": 10, "title": ["Sales.Customer", "\nPrimary Key: CustomerID\njoin to Sales.Store on StoreID\njoin to Sales.SalesTerritory on TerritoryID\njoin to Person.Person on PersonID"], "x": 1729.4568713367369, "y": 473.2257375127272}, {"color": "#F99ACB", "id": "Sales.Store", "label": "Sales.Store", "shape": "box", "size": 10, "title": ["Sales.Store", "\nPrimary Key: BusinessEntityID\njoin to Sales.SalesPerson on SalesPersonID\njoin to Person.BusinessEntity on BusinessEntityID"], "x": 1951.8626267653378, "y": 426.38038713083216}, {"color": "#F99ACB", "id": "Sales.SalesTerritory", "label": "Sales.SalesTerritory", "shape": "box", "size": 10, "title": ["Sales.SalesTerritory", "\nPrimary Key: TerritoryID\njoin to Person.CountryRegion on CountryRegionCode"], "x": 1834.7220146526115, "y": 823.6518314908957}, {"color": "#A6D9ED", "id": "Person.Person", "label": "Person.Person", "shape": "box", "size": 10, "title": ["Person.Person", "\nPrimary Key: BusinessEntityID\njoin to Person.BusinessEntity on BusinessEntityID"], "x": 2386.9904207153004, "y": 367.10644829130547}, {"color": "#F99ACB", "id": "Sales.SalesPerson", "label": "Sales.SalesPerson", "shape": "box", "size": 10, "title": ["Sales.SalesPerson", "\nPrimary Key: BusinessEntityID\njoin to Sales.SalesTerritory on TerritoryID\njoin to HumanResources.Employee on BusinessEntityID"], "x": 1360.3204728677088, "y": 527.87034560893}, {"color": "#A6D9ED", "id": "Person.BusinessEntity", "label": "Person.BusinessEntity", "shape": "box", "size": 10, "title": ["Person.BusinessEntity", "\nPrimary Key: BusinessEntityID\n"], "x": 2976.2101774510115, "y": 432.04963897726833}, {"color": "#A6D9ED", "id": "Person.CountryRegion", "label": "Person.CountryRegion", "shape": "box", "size": 10, "title": ["Person.CountryRegion", "\nPrimary Key: CountryRegionCode\n"], "x": 2452.97784281964, "y": 1006.3569948711927}, {"color": "#F99ACB", "id": "Sales.SalesTaxRate", "label": "Sales.SalesTaxRate", "shape": "box", "size": 10, "title": ["Sales.SalesTaxRate", "\nPrimary Key: SalesTaxRateID\njoin to Person.StateProvince on StateProvinceID"], "x": 1356.9619150788374, "y": 714.2228069136481}, {"color": "#A6D9ED", "id": "Person.StateProvince", "label": "Person.StateProvince", "shape": "box", "size": 10, "title": ["Person.StateProvince", "\nPrimary Key: StateProvinceID\njoin to Person.CountryRegion on CountryRegionCode\njoin to Sales.SalesTerritory on TerritoryID"], "x": 1909.8950302457815, "y": 780.9974368837378}, {"color": "#F99ACB", "id": "Sales.SalesOrderHeader", "label": "Sales.SalesOrderHeader", "shape": "box", "size": 10, "title": ["Sales.SalesOrderHeader", "\nPrimary Key: SalesOrderID\njoin to Sales.SalesTerritory on TerritoryID\njoin to Sales.CreditCard on CreditCardID\njoin to Sales.CurrencyRate on CurrencyRateID\njoin to Person.Address on BillToAddressID\njoin to Sales.Customer on CustomerID\njoin to Purchasing.ShipMethod on ShipMethodID\njoin to Person.Address on ShipToAddressID\njoin to Sales.SalesPerson on SalesPersonID"], "x": -2.5234274278630022, "y": 646.5751523281153}, {"color": "#F99ACB", "id": "Sales.CreditCard", "label": "Sales.CreditCard", "shape": "box", "size": 10, "title": ["Sales.CreditCard", "\nPrimary Key: CreditCardID\n"], "x": 1214.8874657915858, "y": 2219.7981184593136}, {"color": "#F99ACB", "id": "Sales.CurrencyRate", "label": "Sales.CurrencyRate", "shape": "box", "size": 10, "title": ["Sales.CurrencyRate", "\nPrimary Key: CurrencyRateID\njoin to Sales.Currency on FromCurrencyCode\njoin to Sales.Currency on ToCurrencyCode"], "x": -3850.4882244169353, "y": -729.8374258497183}, {"color": "#A6D9ED", "id": "Person.Address", "label": "Person.Address", "shape": "box", "size": 10, "title": ["Person.Address", "\nPrimary Key: AddressID\njoin to Person.StateProvince on StateProvinceID"], "x": 1277.15394648743, "y": 622.8375364366002}, {"color": "#8BC6CD", "id": "Purchasing.ShipMethod", "label": "Purchasing.ShipMethod", "shape": "box", "size": 10, "title": ["Purchasing.ShipMethod", "\nPrimary Key: ShipMethodID\n"], "x": 1672.1189302721332, "y": 1569.344470151591}, {"color": "#F99ACB", "id": "Sales.Currency", "label": "Sales.Currency", "shape": "box", "size": 10, "title": ["Sales.Currency", "\nPrimary Key: CurrencyCode\n"], "x": -4336.349827341521, "y": -850.0763400115002}, {"color": "#ECB8DA", "id": "HumanResources.Employee", "label": "HumanResources.Employee", "shape": "box", "size": 10, "title": ["HumanResources.Employee", "\nPrimary Key: BusinessEntityID\njoin to Person.Person on BusinessEntityID"], "x": 1516.5845578162364, "y": 256.4106532011926}, {"color": "#F99ACB", "id": "Sales.SalesOrderDetail", "label": "Sales.SalesOrderDetail", "shape": "box", "size": 10, "title": ["Sales.SalesOrderDetail", "\njoin to Sales.SalesOrderHeader on SalesOrderID"], "x": -131.16288879559482, "y": 771.4134183210897}, {"color": "#F99ACB", "id": "Sales.SalesOrderHeaderSalesReason", "label": "Sales.SalesOrderHeaderSalesReason", "shape": "box", "size": 10, "title": ["Sales.SalesOrderHeaderSalesReason", "\njoin to Sales.SalesReason on SalesReasonID\njoin to Sales.SalesOrderHeader on SalesOrderID"], "x": -499.92131341728344, "y": -647.428503289516}, {"color": "#F99ACB", "id": "Sales.SalesReason", "label": "Sales.SalesReason", "shape": "box", "size": 10, "title": ["Sales.SalesReason", "\nPrimary Key: SalesReasonID\n"], "x": -986.8439280592182, "y": -1940.3574155563056}, {"color": "#F99ACB", "id": "Sales.SalesTerritoryHistory", "label": "Sales.SalesTerritoryHistory", "shape": "box", "size": 10, "title": ["Sales.SalesTerritoryHistory", "\njoin to Sales.SalesPerson on BusinessEntityID\njoin to Sales.SalesTerritory on TerritoryID"], "x": 1585.3652057563015, "y": 702.324130963666}, {"color": "#F99ACB", "id": "Sales.SpecialOfferProduct", "label": "Sales.SpecialOfferProduct", "shape": "box", "size": 10, "title": ["Sales.SpecialOfferProduct", "\njoin to Sales.SpecialOffer on SpecialOfferID\njoin to Production.Product on ProductID"], "x": 394.46753631633914, "y": -1641.4955846066346}, {"color": "#F99ACB", "id": "Sales.SpecialOffer", "label": "Sales.SpecialOffer", "shape": "box", "size": 10, "title": ["Sales.SpecialOffer", "\nPrimary Key: SpecialOfferID\n"], "x": -350.2438360399684, "y": -2083.867131027581}, {"color": "#8DCCF8", "id": "Production.Product", "label": "Production.Product", "shape": "box", "size": 10, "title": ["Production.Product", "\nPrimary Key: ProductID\njoin to Production.UnitMeasure on SizeUnitMeasureCode\njoin to Production.ProductModel on ProductModelID\njoin to Production.UnitMeasure on WeightUnitMeasureCode\njoin to Production.ProductSubcategory on ProductSubcategoryID"], "x": 1145.928644889022, "y": -1184.0907332053093}, {"color": "#8DCCF8", "id": "Production.UnitMeasure", "label": "Production.UnitMeasure", "shape": "box", "size": 10, "title": ["Production.UnitMeasure", "\nPrimary Key: UnitMeasureCode\n"], "x": 2225.8117681305507, "y": -1324.7962123435757}, {"color": "#8DCCF8", "id": "Production.ProductModel", "label": "Production.ProductModel", "shape": "box", "size": 10, "title": ["Production.ProductModel", "\nPrimary Key: ProductModelID\n"], "x": 1676.7987273821147, "y": -1805.9532719421668}, {"color": "#8DCCF8", "id": "Production.ProductSubcategory", "label": "Production.ProductSubcategory", "shape": "box", "size": 10, "title": ["Production.ProductSubcategory", "\nPrimary Key: ProductSubcategoryID\njoin to Production.ProductCategory on ProductCategoryID"], "x": 890.9682697284287, "y": -1722.0514440990612}, {"color": "#F99ACB", "id": "Sales.SalesPersonQuotaHistory", "label": "Sales.SalesPersonQuotaHistory", "shape": "box", "size": 10, "title": ["Sales.SalesPersonQuotaHistory", "\njoin to Sales.SalesPerson on BusinessEntityID"], "x": 905.5357835175145, "y": 542.8536620599332}, {"color": "#F99ACB", "id": "Sales.PersonCreditCard", "label": "Sales.PersonCreditCard", "shape": "box", "size": 10, "title": ["Sales.PersonCreditCard", "\njoin to Sales.CreditCard on CreditCardID\njoin to Person.Person on BusinessEntityID"], "x": 1417.4226629084912, "y": 1146.4536450998626}, {"color": "#F99ACB", "id": "Sales.CountryRegionCurrency", "label": "Sales.CountryRegionCurrency", "shape": "box", "size": 10, "title": ["Sales.CountryRegionCurrency", "\njoin to Sales.Currency on CurrencyCode\njoin to Person.CountryRegion on CountryRegionCode"], "x": -944.3851121544427, "y": 80.2111588349714}, {"color": "#F99ACB", "id": "Sales.ShoppingCartItem", "label": "Sales.ShoppingCartItem", "shape": "box", "size": 10, "title": ["Sales.ShoppingCartItem", "\nPrimary Key: ShoppingCartItemID\njoin to Production.Product on ProductID"], "x": 707.8810634782535, "y": -794.1561493191863}, {"color": "#8BC6CD", "id": "Purchasing.PurchaseOrderDetail", "label": "Purchasing.PurchaseOrderDetail", "shape": "box", "size": 10, "title": ["Purchasing.PurchaseOrderDetail", "\njoin to Production.Product on ProductID\njoin to Purchasing.PurchaseOrderHeader on PurchaseOrderID"], "x": 1399.1824960875838, "y": -179.83040676083294}, {"color": "#8BC6CD", "id": "Purchasing.PurchaseOrderHeader", "label": "Purchasing.PurchaseOrderHeader", "shape": "box", "size": 10, "title": ["Purchasing.PurchaseOrderHeader", "\nPrimary Key: PurchaseOrderID\njoin to HumanResources.Employee on EmployeeID\njoin to Purchasing.ShipMethod on ShipMethodID\njoin to Purchasing.Vendor on VendorID"], "x": 1646.341259721801, "y": 831.3336427131621}, {"color": "#8BC6CD", "id": "Purchasing.Vendor", "label": "Purchasing.Vendor", "shape": "box", "size": 10, "title": ["Purchasing.Vendor", "\nPrimary Key: BusinessEntityID\njoin to Person.BusinessEntity on BusinessEntityID"], "x": 1795.649155086394, "y": 346.7580707890241}, {"color": "#8BC6CD", "id": "Purchasing.ProductVendor", "label": "Purchasing.ProductVendor", "shape": "box", "size": 10, "title": ["Purchasing.ProductVendor", "\njoin to Purchasing.Vendor on BusinessEntityID\njoin to Production.UnitMeasure on UnitMeasureCode\njoin to Production.Product on ProductID"], "x": 1753.3961925466544, "y": -621.8637556145538}, {"color": "#A6D9ED", "id": "Person.Password", "label": "Person.Password", "shape": "box", "size": 10, "title": ["Person.Password", "\nPrimary Key: BusinessEntityID\njoin to Person.Person on BusinessEntityID"], "x": 1741.5309356939017, "y": 221.35384709134505}, {"color": "#A6D9ED", "id": "Person.BusinessEntityAddress", "label": "Person.BusinessEntityAddress", "shape": "box", "size": 10, "title": ["Person.BusinessEntityAddress", "\njoin to Person.AddressType on AddressTypeID\njoin to Person.Address on AddressID\njoin to Person.BusinessEntity on BusinessEntityID"], "x": -403.896858118957, "y": 878.7423940482973}, {"color": "#A6D9ED", "id": "Person.AddressType", "label": "Person.AddressType", "shape": "box", "size": 10, "title": ["Person.AddressType", "\nPrimary Key: AddressTypeID\n"], "x": -4168.776422936975, "y": 1385.393986691009}, {"color": "#A6D9ED", "id": "Person.EmailAddress", "label": "Person.EmailAddress", "shape": "box", "size": 10, "title": ["Person.EmailAddress", "\njoin to Person.Person on BusinessEntityID"], "x": 2197.962351995555, "y": 236.816326783754}, {"color": "#A6D9ED", "id": "Person.BusinessEntityContact", "label": "Person.BusinessEntityContact", "shape": "box", "size": 10, "title": ["Person.BusinessEntityContact", "\njoin to Person.ContactType on ContactTypeID\njoin to Person.Person on PersonID\njoin to Person.BusinessEntity on BusinessEntityID"], "x": 439.55312000084024, "y": -497.72206940685516}, {"color": "#A6D9ED", "id": "Person.ContactType", "label": "Person.ContactType", "shape": "box", "size": 10, "title": ["Person.ContactType", "\nPrimary Key: ContactTypeID\n"], "x": -2747.7319044577694, "y": -1766.0357261574152}, {"color": "#A6D9ED", "id": "Person.PersonPhone", "label": "Person.PersonPhone", "shape": "box", "size": 10, "title": ["Person.PersonPhone", "\njoin to Person.Person on BusinessEntityID\njoin to Person.PhoneNumberType on PhoneNumberTypeID"], "x": -62.0838225778436, "y": 1409.952221220008}, {"color": "#A6D9ED", "id": "Person.PhoneNumberType", "label": "Person.PhoneNumberType", "shape": "box", "size": 10, "title": ["Person.PhoneNumberType", "\nPrimary Key: PhoneNumberTypeID\n"], "x": -2506.123646556228, "y": 2446.522873726034}, {"color": "#8DCCF8", "id": "Production.ProductInventory", "label": "Production.ProductInventory", "shape": "box", "size": 10, "title": ["Production.ProductInventory", "\njoin to Production.Product on ProductID\njoin to Production.Location on LocationID"], "x": -1558.6422811384552, "y": -175.48667401737745}, {"color": "#8DCCF8", "id": "Production.Location", "label": "Production.Location", "shape": "box", "size": 10, "title": ["Production.Location", "\nPrimary Key: LocationID\n"], "x": -4252.964112597988, "y": 832.5868213939142}, {"color": "#8DCCF8", "id": "Production.ProductModelProductDescriptionCulture", "label": "Production.ProductModelProductDescriptionCulture", "shape": "box", "size": 10, "title": ["Production.ProductModelProductDescriptionCulture", "\njoin to Production.Culture on CultureID\njoin to Production.ProductDescription on ProductDescriptionID\njoin to Production.ProductModel on ProductModelID"], "x": -741.8058067596982, "y": 647.777821128809}, {"color": "#8DCCF8", "id": "Production.Culture", "label": "Production.Culture", "shape": "box", "size": 10, "title": ["Production.Culture", "\nPrimary Key: CultureID\n"], "x": -1372.2230977881618, "y": 2531.585317296665}, {"color": "#8DCCF8", "id": "Production.ProductDescription", "label": "Production.ProductDescription", "shape": "box", "size": 10, "title": ["Production.ProductDescription", "\nPrimary Key: ProductDescriptionID\n"], "x": -3288.5057435113827, "y": 2196.576429929719}, {"color": "#8DCCF8", "id": "Production.ProductCostHistory", "label": "Production.ProductCostHistory", "shape": "box", "size": 10, "title": ["Production.ProductCostHistory", "\njoin to Production.Product on ProductID"], "x": 891.1120944726407, "y": -1020.3634408099987}, {"color": "#8DCCF8", "id": "Production.ProductModelIllustration", "label": "Production.ProductModelIllustration", "shape": "box", "size": 10, "title": ["Production.ProductModelIllustration", "\njoin to Production.ProductModel on ProductModelID\njoin to Production.Illustration on IllustrationID"], "x": -824.9787936074376, "y": -130.0409881768406}, {"color": "#8DCCF8", "id": "Production.Illustration", "label": "Production.Illustration", "shape": "box", "size": 10, "title": ["Production.Illustration", "\nPrimary Key: IllustrationID\n"], "x": -3318.2045360672832, "y": 1548.0656724319842}, {"color": "#8DCCF8", "id": "Production.WorkOrderRouting", "label": "Production.WorkOrderRouting", "shape": "box", "size": 10, "title": ["Production.WorkOrderRouting", "\njoin to Production.Location on LocationID\njoin to Production.WorkOrder on WorkOrderID"], "x": -2694.033423304024, "y": -235.26890876512437}, {"color": "#8DCCF8", "id": "Production.WorkOrder", "label": "Production.WorkOrder", "shape": "box", "size": 10, "title": ["Production.WorkOrder", "\nPrimary Key: WorkOrderID\njoin to Production.Product on ProductID\njoin to Production.ScrapReason on ScrapReasonID"], "x": -1132.4502392791137, "y": -1305.023864607463}, {"color": "#8DCCF8", "id": "Production.ScrapReason", "label": "Production.ScrapReason", "shape": "box", "size": 10, "title": ["Production.ScrapReason", "\nPrimary Key: ScrapReasonID\n"], "x": -3403.3779335009167, "y": -1421.3470468770258}, {"color": "#8DCCF8", "id": "Production.TransactionHistory", "label": "Production.TransactionHistory", "shape": "box", "size": 10, "title": ["Production.TransactionHistory", "\nPrimary Key: TransactionID\njoin to Production.Product on ProductID"], "x": 835.9111207521447, "y": -915.4505748961483}, {"color": "#8DCCF8", "id": "Production.ProductProductPhoto", "label": "Production.ProductProductPhoto", "shape": "box", "size": 10, "title": ["Production.ProductProductPhoto", "\njoin to Production.ProductPhoto on ProductPhotoID\njoin to Production.Product on ProductID"], "x": -1029.2842299473111, "y": -1058.290695315862}, {"color": "#8DCCF8", "id": "Production.ProductPhoto", "label": "Production.ProductPhoto", "shape": "box", "size": 10, "title": ["Production.ProductPhoto", "\nPrimary Key: ProductPhotoID\n"], "x": -3196.4291988995737, "y": -930.7577288101005}, {"color": "#8DCCF8", "id": "Production.ProductListPriceHistory", "label": "Production.ProductListPriceHistory", "shape": "box", "size": 10, "title": ["Production.ProductListPriceHistory", "\njoin to Production.Product on ProductID"], "x": 1275.924361971687, "y": -1146.281808571854}, {"color": "#8DCCF8", "id": "Production.ProductDocument", "label": "Production.ProductDocument", "shape": "box", "size": 10, "title": ["Production.ProductDocument", "\njoin to Production.Document on DocumentNode\njoin to Production.Product on ProductID"], "x": 935.7111742139903, "y": -449.51216375585886}, {"color": "#8DCCF8", "id": "Production.Document", "label": "Production.Document", "shape": "box", "size": 10, "title": ["Production.Document", "\nPrimary Key: DocumentNode\njoin to HumanResources.Employee on Owner"], "x": 1052.6952792834002, "y": 252.21548953938634}, {"color": "#8DCCF8", "id": "Production.BillOfMaterials", "label": "Production.BillOfMaterials", "shape": "box", "size": 10, "title": ["Production.BillOfMaterials", "\njoin to Production.UnitMeasure on UnitMeasureCode\njoin to Production.Product on ComponentID\njoin to Production.Product on ProductAssemblyID"], "x": 1683.0025201341414, "y": -1248.2144300636032}, {"color": "#8DCCF8", "id": "Production.ProductReview", "label": "Production.ProductReview", "shape": "box", "size": 10, "title": ["Production.ProductReview", "\nPrimary Key: ProductReviewID\njoin to Production.Product on ProductID"], "x": 708.2421834832171, "y": -863.1257808814602}, {"color": "#8DCCF8", "id": "Production.ProductCategory", "label": "Production.ProductCategory", "shape": "box", "size": 10, "title": ["Production.ProductCategory", "\nPrimary Key: ProductCategoryID\n"], "x": 1022.7617478960972, "y": -1628.1490275618526}, {"color": "#ECB8DA", "id": "HumanResources.JobCandidate", "label": "HumanResources.JobCandidate", "shape": "box", "size": 10, "title": ["HumanResources.JobCandidate", "\nPrimary Key: JobCandidateID\njoin to HumanResources.Employee on BusinessEntityID"], "x": 1012.0240678080163, "y": 144.18572448125357}, {"color": "#ECB8DA", "id": "HumanResources.EmployeePayHistory", "label": "HumanResources.EmployeePayHistory", "shape": "box", "size": 10, "title": ["HumanResources.EmployeePayHistory", "\njoin to HumanResources.Employee on BusinessEntityID"], "x": 958.68145752423, "y": 218.9940629884048}, {"color": "#ECB8DA", "id": "HumanResources.EmployeeDepartmentHistory", "label": "HumanResources.EmployeeDepartmentHistory", "shape": "box", "size": 10, "title": ["HumanResources.EmployeeDepartmentHistory", "\njoin to HumanResources.Department on DepartmentID\njoin to HumanResources.Employee on BusinessEntityID\njoin to HumanResources.Shift on ShiftID"], "x": -738.881708206774, "y": 65.55671537430766}, {"color": "#ECB8DA", "id": "HumanResources.Department", "label": "HumanResources.Department", "shape": "box", "size": 10, "title": ["HumanResources.Department", "\nPrimary Key: DepartmentID\n"], "x": -1943.6486826970024, "y": -2215.818196393571}, {"color": "#ECB8DA", "id": "HumanResources.Shift", "label": "HumanResources.Shift", "shape": "box", "size": 10, "title": ["HumanResources.Shift", "\nPrimary Key: ShiftID\n"], "x": -954.0424534739036, "y": 2348.3082513940067}, {"color": "#8DCCF8", "id": "Production.TransactionHistoryArchive", "label": "Production.TransactionHistoryArchive", "shape": "box", "size": 10, "title": ["Production.TransactionHistoryArchive", "\nPrimary Key: TransactionID\n"], "x": -4500.0, "y": -120.11574386360158}]);
+                  edges = new vis.DataSet([{"from": "Sales.Customer", "to": "Sales.Store", "width": 1}, {"from": "Sales.Customer", "to": "Sales.SalesTerritory", "width": 1}, {"from": "Sales.Customer", "to": "Person.Person", "width": 1}, {"from": "Sales.Store", "to": "Sales.SalesPerson", "width": 1}, {"from": "Sales.Store", "to": "Person.BusinessEntity", "width": 1}, {"from": "Sales.SalesTerritory", "to": "Person.CountryRegion", "width": 1}, {"from": "Person.Person", "to": "Person.BusinessEntity", "width": 1}, {"from": "Sales.SalesTaxRate", "to": "Person.StateProvince", "width": 1}, {"from": "Person.StateProvince", "to": "Person.CountryRegion", "width": 1}, {"from": "Person.StateProvince", "to": "Sales.SalesTerritory", "width": 1}, {"from": "Sales.SalesOrderHeader", "to": "Sales.SalesTerritory", "width": 1}, {"from": "Sales.SalesOrderHeader", "to": "Sales.CreditCard", "width": 1}, {"from": "Sales.SalesOrderHeader", "to": "Sales.CurrencyRate", "width": 1}, {"from": "Sales.SalesOrderHeader", "to": "Person.Address", "width": 1}, {"from": "Sales.SalesOrderHeader", "to": "Sales.Customer", "width": 1}, {"from": "Sales.SalesOrderHeader", "to": "Purchasing.ShipMethod", "width": 1}, {"from": "Sales.SalesOrderHeader", "to": "Sales.SalesPerson", "width": 1}, {"from": "Sales.CurrencyRate", "to": "Sales.Currency", "width": 1}, {"from": "Person.Address", "to": "Person.StateProvince", "width": 1}, {"from": "Sales.SalesPerson", "to": "Sales.SalesTerritory", "width": 1}, {"from": "Sales.SalesPerson", "to": "HumanResources.Employee", "width": 1}, {"from": "Sales.SalesOrderDetail", "to": "Sales.SalesOrderHeader", "width": 1}, {"from": "Sales.SalesOrderHeaderSalesReason", "to": "Sales.SalesReason", "width": 1}, {"from": "Sales.SalesOrderHeaderSalesReason", "to": "Sales.SalesOrderHeader", "width": 1}, {"from": "Sales.SalesTerritoryHistory", "to": "Sales.SalesPerson", "width": 1}, {"from": "Sales.SalesTerritoryHistory", "to": "Sales.SalesTerritory", "width": 1}, {"from": "Sales.SpecialOfferProduct", "to": "Sales.SpecialOffer", "width": 1}, {"from": "Sales.SpecialOfferProduct", "to": "Production.Product", "width": 1}, {"from": "Production.Product", "to": "Production.UnitMeasure", "width": 1}, {"from": "Production.Product", "to": "Production.ProductModel", "width": 1}, {"from": "Production.Product", "to": "Production.ProductSubcategory", "width": 1}, {"from": "Sales.SalesPersonQuotaHistory", "to": "Sales.SalesPerson", "width": 1}, {"from": "Sales.PersonCreditCard", "to": "Sales.CreditCard", "width": 1}, {"from": "Sales.PersonCreditCard", "to": "Person.Person", "width": 1}, {"from": "HumanResources.Employee", "to": "Person.Person", "width": 1}, {"from": "Sales.CountryRegionCurrency", "to": "Sales.Currency", "width": 1}, {"from": "Sales.CountryRegionCurrency", "to": "Person.CountryRegion", "width": 1}, {"from": "Sales.ShoppingCartItem", "to": "Production.Product", "width": 1}, {"from": "Purchasing.PurchaseOrderDetail", "to": "Production.Product", "width": 1}, {"from": "Purchasing.PurchaseOrderDetail", "to": "Purchasing.PurchaseOrderHeader", "width": 1}, {"from": "Purchasing.PurchaseOrderHeader", "to": "HumanResources.Employee", "width": 1}, {"from": "Purchasing.PurchaseOrderHeader", "to": "Purchasing.ShipMethod", "width": 1}, {"from": "Purchasing.PurchaseOrderHeader", "to": "Purchasing.Vendor", "width": 1}, {"from": "Purchasing.ProductVendor", "to": "Purchasing.Vendor", "width": 1}, {"from": "Purchasing.ProductVendor", "to": "Production.UnitMeasure", "width": 1}, {"from": "Purchasing.ProductVendor", "to": "Production.Product", "width": 1}, {"from": "Purchasing.Vendor", "to": "Person.BusinessEntity", "width": 1}, {"from": "Person.Password", "to": "Person.Person", "width": 1}, {"from": "Person.BusinessEntityAddress", "to": "Person.AddressType", "width": 1}, {"from": "Person.BusinessEntityAddress", "to": "Person.Address", "width": 1}, {"from": "Person.BusinessEntityAddress", "to": "Person.BusinessEntity", "width": 1}, {"from": "Person.EmailAddress", "to": "Person.Person", "width": 1}, {"from": "Person.BusinessEntityContact", "to": "Person.ContactType", "width": 1}, {"from": "Person.BusinessEntityContact", "to": "Person.Person", "width": 1}, {"from": "Person.BusinessEntityContact", "to": "Person.BusinessEntity", "width": 1}, {"from": "Person.PersonPhone", "to": "Person.Person", "width": 1}, {"from": "Person.PersonPhone", "to": "Person.PhoneNumberType", "width": 1}, {"from": "Production.ProductInventory", "to": "Production.Product", "width": 1}, {"from": "Production.ProductInventory", "to": "Production.Location", "width": 1}, {"from": "Production.ProductModelProductDescriptionCulture", "to": "Production.Culture", "width": 1}, {"from": "Production.ProductModelProductDescriptionCulture", "to": "Production.ProductDescription", "width": 1}, {"from": "Production.ProductModelProductDescriptionCulture", "to": "Production.ProductModel", "width": 1}, {"from": "Production.ProductCostHistory", "to": "Production.Product", "width": 1}, {"from": "Production.ProductModelIllustration", "to": "Production.ProductModel", "width": 1}, {"from": "Production.ProductModelIllustration", "to": "Production.Illustration", "width": 1}, {"from": "Production.WorkOrderRouting", "to": "Production.Location", "width": 1}, {"from": "Production.WorkOrderRouting", "to": "Production.WorkOrder", "width": 1}, {"from": "Production.WorkOrder", "to": "Production.Product", "width": 1}, {"from": "Production.WorkOrder", "to": "Production.ScrapReason", "width": 1}, {"from": "Production.TransactionHistory", "to": "Production.Product", "width": 1}, {"from": "Production.ProductProductPhoto", "to": "Production.ProductPhoto", "width": 1}, {"from": "Production.ProductProductPhoto", "to": "Production.Product", "width": 1}, {"from": "Production.ProductListPriceHistory", "to": "Production.Product", "width": 1}, {"from": "Production.ProductDocument", "to": "Production.Document", "width": 1}, {"from": "Production.ProductDocument", "to": "Production.Product", "width": 1}, {"from": "Production.Document", "to": "HumanResources.Employee", "width": 1}, {"from": "Production.BillOfMaterials", "to": "Production.UnitMeasure", "width": 1}, {"from": "Production.BillOfMaterials", "to": "Production.Product", "width": 1}, {"from": "Production.ProductReview", "to": "Production.Product", "width": 1}, {"from": "Production.ProductSubcategory", "to": "Production.ProductCategory", "width": 1}, {"from": "HumanResources.JobCandidate", "to": "HumanResources.Employee", "width": 1}, {"from": "HumanResources.EmployeePayHistory", "to": "HumanResources.Employee", "width": 1}, {"from": "HumanResources.EmployeeDepartmentHistory", "to": "HumanResources.Department", "width": 1}, {"from": "HumanResources.EmployeeDepartmentHistory", "to": "HumanResources.Employee", "width": 1}, {"from": "HumanResources.EmployeeDepartmentHistory", "to": "HumanResources.Shift", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

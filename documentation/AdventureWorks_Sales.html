@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 1080px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#9BE8CE", "id": "Sales.Store", "label": "Sales.Store", "shape": "box", "size": 10, "title": ["Sales.Store", "\nPrimary Key: BusinessEntityID\njoin to Sales.SalesPerson on SalesPersonID\njoin to Person.BusinessEntity on BusinessEntityID"], "x": -219.76174271875655, "y": 571.3789185456566}, {"color": "#9BE8CE", "id": "Sales.SalesPerson", "label": "Sales.SalesPerson", "shape": "box", "size": 10, "title": ["Sales.SalesPerson", "\nPrimary Key: BusinessEntityID\njoin to Sales.SalesTerritory on TerritoryID\njoin to HumanResources.Employee on BusinessEntityID"], "x": -659.2535515080303, "y": 1023.6860710468482}, {"color": "#9BE8CE", "id": "Sales.SalesOrderDetail", "label": "Sales.SalesOrderDetail", "shape": "box", "size": 10, "title": ["Sales.SalesOrderDetail", "\njoin to Sales.SalesOrderHeader on SalesOrderID"], "x": -1425.3141570038301, "y": 221.33535654523394}, {"color": "#9BE8CE", "id": "Sales.SalesOrderHeader", "label": "Sales.SalesOrderHeader", "shape": "box", "size": 10, "title": ["Sales.SalesOrderHeader", "\nPrimary Key: SalesOrderID\njoin to Sales.SalesTerritory on TerritoryID\njoin to Sales.CreditCard on CreditCardID\njoin to Sales.CurrencyRate on CurrencyRateID\njoin to Person.Address on BillToAddressID\njoin to Sales.Customer on CustomerID\njoin to Purchasing.ShipMethod on ShipMethodID\njoin to Person.Address on ShipToAddressID\njoin to Sales.SalesPerson on SalesPersonID"], "x": -1183.0510648757993, "y": 64.96751125714063}, {"color": "#9BE8CE", "id": "Sales.SalesTerritoryHistory", "label": "Sales.SalesTerritoryHistory", "shape": "box", "size": 10, "title": ["Sales.SalesTerritoryHistory", "\njoin to Sales.SalesPerson on BusinessEntityID\njoin to Sales.SalesTerritory on TerritoryID"], "x": -815.4175308964673, "y": 1280.8436563738123}, {"color": "#9BE8CE", "id": "Sales.SalesTerritory", "label": "Sales.SalesTerritory", "shape": "box", "size": 10, "title": ["Sales.SalesTerritory", "\nPrimary Key: TerritoryID\njoin to Person.CountryRegion on CountryRegionCode"], "x": -1082.7665453433028, "y": 1447.822692360579}, {"color": "#9BE8CE", "id": "Sales.CountryRegionCurrency", "label": "Sales.CountryRegionCurrency", "shape": "box", "size": 10, "title": ["Sales.CountryRegionCurrency", "\njoin to Sales.Currency on CurrencyCode\njoin to Person.CountryRegion on CountryRegionCode"], "x": -1938.1114331933284, "y": -186.51739162470437}, {"color": "#9BE8CE", "id": "Sales.Currency", "label": "Sales.Currency", "shape": "box", "size": 10, "title": ["Sales.Currency", "\nPrimary Key: CurrencyCode\n"], "x": -2500.1207280328313, "y": -49.42689869914685}, {"color": "#9BE8CE", "id": "Sales.CurrencyRate", "label": "Sales.CurrencyRate", "shape": "box", "size": 10, "title": ["Sales.CurrencyRate", "\nPrimary Key: CurrencyRateID\njoin to Sales.Currency on FromCurrencyCode\njoin to Sales.Currency on ToCurrencyCode"], "x": -1478.5635840878506, "y": -147.07127470415693}, {"color": "#9BE8CE", "id": "Sales.SalesPersonQuotaHistory", "label": "Sales.SalesPersonQuotaHistory", "shape": "box", "size": 10, "title": ["Sales.SalesPersonQuotaHistory", "\njoin to Sales.SalesPerson on BusinessEntityID"], "x": -106.64731247623122, "y": 749.9210151640517}, {"color": "#9BE8CE", "id": "Sales.Customer", "label": "Sales.Customer", "shape": "box", "size": 10, "title": ["Sales.Customer", "\nPrimary Key: CustomerID\njoin to Sales.Store on StoreID\njoin to Sales.SalesTerritory on TerritoryID\njoin to Person.Person on PersonID"], "x": -483.59172778506826, "y": 853.2073468257382}, {"color": "#9BE8CE", "id": "Sales.SpecialOfferProduct", "label": "Sales.SpecialOfferProduct", "shape": "box", "size": 10, "title": ["Sales.SpecialOfferProduct", "\njoin to Sales.SpecialOffer on SpecialOfferID\njoin to Production.Product on ProductID"], "x": 3792.5414657622937, "y": 138.32712666325847}, {"color": "#9BE8CE", "id": "Sales.SpecialOffer", "label": "Sales.SpecialOffer", "shape": "box", "size": 10, "title": ["Sales.SpecialOffer", "\nPrimary Key: SpecialOfferID\n"], "x": 4500.0, "y": 299.8224898235501}, {"color": "#9BE8CE", "id": "Sales.CreditCard", "label": "Sales.CreditCard", "shape": "box", "size": 10, "title": ["Sales.CreditCard", "\nPrimary Key: CreditCardID\n"], "x": -1857.6850856354781, "y": -1786.2771909706714}, {"color": "#9BE8CE", "id": "Sales.SalesOrderHeaderSalesReason", "label": "Sales.SalesOrderHeaderSalesReason", "shape": "box", "size": 10, "title": ["Sales.SalesOrderHeaderSalesReason", "\njoin to Sales.SalesReason on SalesReasonID\njoin to Sales.SalesOrderHeader on SalesOrderID"], "x": -443.90194335677194, "y": -1238.749562260809}, {"color": "#9BE8CE", "id": "Sales.SalesReason", "label": "Sales.SalesReason", "shape": "box", "size": 10, "title": ["Sales.SalesReason", "\nPrimary Key: SalesReasonID\n"], "x": 277.0042813244042, "y": -2540.861186420372}, {"color": "#9BE8CE", "id": "Sales.PersonCreditCard", "label": "Sales.PersonCreditCard", "shape": "box", "size": 10, "title": ["Sales.PersonCreditCard", "\njoin to Sales.CreditCard on CreditCardID\njoin to Person.Person on BusinessEntityID"], "x": -1201.2613756603002, "y": -1337.3684713254595}, {"color": "#9BE8CE", "id": "Sales.SalesTaxRate", "label": "Sales.SalesTaxRate", "shape": "box", "size": 10, "title": ["Sales.SalesTaxRate", "\nPrimary Key: SalesTaxRateID\njoin to Person.StateProvince on StateProvinceID"], "x": 2841.978415000035, "y": 1252.7180199826332}, {"color": "#9BE8CE", "id": "Sales.ShoppingCartItem", "label": "Sales.ShoppingCartItem", "shape": "box", "size": 10, "title": ["Sales.ShoppingCartItem", "\nPrimary Key: ShoppingCartItemID\njoin to Production.Product on ProductID"], "x": 3983.9236204873127, "y": -617.7582285831816}]);
+                  edges = new vis.DataSet([{"from": "Sales.Store", "to": "Sales.SalesPerson", "width": 1}, {"from": "Sales.SalesOrderDetail", "to": "Sales.SalesOrderHeader", "width": 1}, {"from": "Sales.SalesTerritoryHistory", "to": "Sales.SalesPerson", "width": 1}, {"from": "Sales.SalesTerritoryHistory", "to": "Sales.SalesTerritory", "width": 1}, {"from": "Sales.SalesPerson", "to": "Sales.SalesTerritory", "width": 1}, {"from": "Sales.CountryRegionCurrency", "to": "Sales.Currency", "width": 1}, {"from": "Sales.CurrencyRate", "to": "Sales.Currency", "width": 1}, {"from": "Sales.SalesPersonQuotaHistory", "to": "Sales.SalesPerson", "width": 1}, {"from": "Sales.Customer", "to": "Sales.Store", "width": 1}, {"from": "Sales.Customer", "to": "Sales.SalesTerritory", "width": 1}, {"from": "Sales.SpecialOfferProduct", "to": "Sales.SpecialOffer", "width": 1}, {"from": "Sales.SalesOrderHeader", "to": "Sales.SalesTerritory", "width": 1}, {"from": "Sales.SalesOrderHeader", "to": "Sales.CreditCard", "width": 1}, {"from": "Sales.SalesOrderHeader", "to": "Sales.CurrencyRate", "width": 1}, {"from": "Sales.SalesOrderHeader", "to": "Sales.Customer", "width": 1}, {"from": "Sales.SalesOrderHeader", "to": "Sales.SalesPerson", "width": 1}, {"from": "Sales.SalesOrderHeaderSalesReason", "to": "Sales.SalesReason", "width": 1}, {"from": "Sales.SalesOrderHeaderSalesReason", "to": "Sales.SalesOrderHeader", "width": 1}, {"from": "Sales.PersonCreditCard", "to": "Sales.CreditCard", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

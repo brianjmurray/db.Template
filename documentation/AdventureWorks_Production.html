@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 1080px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#7769AB", "id": "Production.ProductProductPhoto", "label": "Production.ProductProductPhoto", "shape": "box", "size": 10, "title": ["Production.ProductProductPhoto", "\njoin to Production.ProductPhoto on ProductPhotoID\njoin to Production.Product on ProductID"], "x": 1526.0015224372664, "y": 84.95638968629767}, {"color": "#7769AB", "id": "Production.ProductPhoto", "label": "Production.ProductPhoto", "shape": "box", "size": 10, "title": ["Production.ProductPhoto", "\nPrimary Key: ProductPhotoID\n"], "x": 4246.675957518207, "y": 72.61847170941833}, {"color": "#7769AB", "id": "Production.Product", "label": "Production.Product", "shape": "box", "size": 10, "title": ["Production.Product", "\nPrimary Key: ProductID\njoin to Production.UnitMeasure on SizeUnitMeasureCode\njoin to Production.ProductModel on ProductModelID\njoin to Production.UnitMeasure on WeightUnitMeasureCode\njoin to Production.ProductSubcategory on ProductSubcategoryID"], "x": -1202.5079688772416, "y": 101.13213337194773}, {"color": "#7769AB", "id": "Production.TransactionHistory", "label": "Production.TransactionHistory", "shape": "box", "size": 10, "title": ["Production.TransactionHistory", "\nPrimary Key: TransactionID\njoin to Production.Product on ProductID"], "x": -1147.9380419142956, "y": 370.4002112559388}, {"color": "#7769AB", "id": "Production.WorkOrderRouting", "label": "Production.WorkOrderRouting", "shape": "box", "size": 10, "title": ["Production.WorkOrderRouting", "\njoin to Production.Location on LocationID\njoin to Production.WorkOrder on WorkOrderID"], "x": 2480.4942842770397, "y": 383.89900789990037}, {"color": "#7769AB", "id": "Production.Location", "label": "Production.Location", "shape": "box", "size": 10, "title": ["Production.Location", "\nPrimary Key: LocationID\n"], "x": 3561.3707427428235, "y": 1403.2542117293308}, {"color": "#7769AB", "id": "Production.WorkOrder", "label": "Production.WorkOrder", "shape": "box", "size": 10, "title": ["Production.WorkOrder", "\nPrimary Key: WorkOrderID\njoin to Production.Product on ProductID\njoin to Production.ScrapReason on ScrapReasonID"], "x": 1450.2895864996874, "y": -644.9187856821475}, {"color": "#7769AB", "id": "Production.ProductCostHistory", "label": "Production.ProductCostHistory", "shape": "box", "size": 10, "title": ["Production.ProductCostHistory", "\njoin to Production.Product on ProductID"], "x": -1528.3193589765613, "y": -98.42577879529343}, {"color": "#7769AB", "id": "Production.ProductReview", "label": "Production.ProductReview", "shape": "box", "size": 10, "title": ["Production.ProductReview", "\nPrimary Key: ProductReviewID\njoin to Production.Product on ProductID"], "x": -1597.3644052427655, "y": 230.76973109878443}, {"color": "#7769AB", "id": "Production.BillOfMaterials", "label": "Production.BillOfMaterials", "shape": "box", "size": 10, "title": ["Production.BillOfMaterials", "\njoin to Production.UnitMeasure on UnitMeasureCode\njoin to Production.Product on ComponentID\njoin to Production.Product on ProductAssemblyID"], "x": -2780.295107000929, "y": 134.62023999808852}, {"color": "#7769AB", "id": "Production.UnitMeasure", "label": "Production.UnitMeasure", "shape": "box", "size": 10, "title": ["Production.UnitMeasure", "\nPrimary Key: UnitMeasureCode\n"], "x": -4322.068494925957, "y": 166.18121053646314}, {"color": "#7769AB", "id": "Production.ProductInventory", "label": "Production.ProductInventory", "shape": "box", "size": 10, "title": ["Production.ProductInventory", "\njoin to Production.Product on ProductID\njoin to Production.Location on LocationID"], "x": 1178.6435909263985, "y": 756.8560341815745}, {"color": "#7769AB", "id": "Production.ProductSubcategory", "label": "Production.ProductSubcategory", "shape": "box", "size": 10, "title": ["Production.ProductSubcategory", "\nPrimary Key: ProductSubcategoryID\njoin to Production.ProductCategory on ProductCategoryID"], "x": -2670.337904170344, "y": -2346.469566646642}, {"color": "#7769AB", "id": "Production.ProductCategory", "label": "Production.ProductCategory", "shape": "box", "size": 10, "title": ["Production.ProductCategory", "\nPrimary Key: ProductCategoryID\n"], "x": -3059.574122366085, "y": -2325.4467628904217}, {"color": "#7769AB", "id": "Production.ScrapReason", "label": "Production.ScrapReason", "shape": "box", "size": 10, "title": ["Production.ScrapReason", "\nPrimary Key: ScrapReasonID\n"], "x": 4097.526204838468, "y": -1378.7625382662554}, {"color": "#7769AB", "id": "Production.ProductModelProductDescriptionCulture", "label": "Production.ProductModelProductDescriptionCulture", "shape": "box", "size": 10, "title": ["Production.ProductModelProductDescriptionCulture", "\njoin to Production.Culture on CultureID\njoin to Production.ProductDescription on ProductDescriptionID\njoin to Production.ProductModel on ProductModelID"], "x": 218.66577342496393, "y": 111.80187711920246}, {"color": "#7769AB", "id": "Production.Culture", "label": "Production.Culture", "shape": "box", "size": 10, "title": ["Production.Culture", "\nPrimary Key: CultureID\n"], "x": 2952.166272027862, "y": -2696.115775016558}, {"color": "#7769AB", "id": "Production.ProductDescription", "label": "Production.ProductDescription", "shape": "box", "size": 10, "title": ["Production.ProductDescription", "\nPrimary Key: ProductDescriptionID\n"], "x": -4142.865229116017, "y": 1473.599896075056}, {"color": "#7769AB", "id": "Production.ProductModel", "label": "Production.ProductModel", "shape": "box", "size": 10, "title": ["Production.ProductModel", "\nPrimary Key: ProductModelID\n"], "x": 2179.0554933970884, "y": 2169.470397646306}, {"color": "#7769AB", "id": "Production.ProductModelIllustration", "label": "Production.ProductModelIllustration", "shape": "box", "size": 10, "title": ["Production.ProductModelIllustration", "\njoin to Production.ProductModel on ProductModelID\njoin to Production.Illustration on IllustrationID"], "x": 925.6127291167297, "y": 2104.069750617703}, {"color": "#7769AB", "id": "Production.Illustration", "label": "Production.Illustration", "shape": "box", "size": 10, "title": ["Production.Illustration", "\nPrimary Key: IllustrationID\n"], "x": -260.2637128549361, "y": 2341.108726518416}, {"color": "#7769AB", "id": "Production.ProductDocument", "label": "Production.ProductDocument", "shape": "box", "size": 10, "title": ["Production.ProductDocument", "\njoin to Production.Document on DocumentNode\njoin to Production.Product on ProductID"], "x": 58.64757595956534, "y": -1452.6033151629435}, {"color": "#7769AB", "id": "Production.Document", "label": "Production.Document", "shape": "box", "size": 10, "title": ["Production.Document", "\nPrimary Key: DocumentNode\njoin to HumanResources.Employee on Owner"], "x": 1328.361780610744, "y": -2999.9999999999995}, {"color": "#7769AB", "id": "Production.ProductListPriceHistory", "label": "Production.ProductListPriceHistory", "shape": "box", "size": 10, "title": ["Production.ProductListPriceHistory", "\njoin to Production.Product on ProductID"], "x": -1051.6112150277247, "y": -142.64118486566957}, {"color": "#7769AB", "id": "Production.TransactionHistoryArchive", "label": "Production.TransactionHistoryArchive", "shape": "box", "size": 10, "title": ["Production.TransactionHistoryArchive", "\nPrimary Key: TransactionID\n"], "x": -2440.365953303991, "y": 2180.645417881501}]);
+                  edges = new vis.DataSet([{"from": "Production.ProductProductPhoto", "to": "Production.ProductPhoto", "width": 1}, {"from": "Production.ProductProductPhoto", "to": "Production.Product", "width": 1}, {"from": "Production.TransactionHistory", "to": "Production.Product", "width": 1}, {"from": "Production.WorkOrderRouting", "to": "Production.Location", "width": 1}, {"from": "Production.WorkOrderRouting", "to": "Production.WorkOrder", "width": 1}, {"from": "Production.ProductCostHistory", "to": "Production.Product", "width": 1}, {"from": "Production.ProductReview", "to": "Production.Product", "width": 1}, {"from": "Production.BillOfMaterials", "to": "Production.UnitMeasure", "width": 1}, {"from": "Production.BillOfMaterials", "to": "Production.Product", "width": 1}, {"from": "Production.ProductInventory", "to": "Production.Product", "width": 1}, {"from": "Production.ProductInventory", "to": "Production.Location", "width": 1}, {"from": "Production.ProductSubcategory", "to": "Production.ProductCategory", "width": 1}, {"from": "Production.WorkOrder", "to": "Production.Product", "width": 1}, {"from": "Production.WorkOrder", "to": "Production.ScrapReason", "width": 1}, {"from": "Production.ProductModelProductDescriptionCulture", "to": "Production.Culture", "width": 1}, {"from": "Production.ProductModelProductDescriptionCulture", "to": "Production.ProductDescription", "width": 1}, {"from": "Production.ProductModelProductDescriptionCulture", "to": "Production.ProductModel", "width": 1}, {"from": "Production.ProductModelIllustration", "to": "Production.ProductModel", "width": 1}, {"from": "Production.ProductModelIllustration", "to": "Production.Illustration", "width": 1}, {"from": "Production.ProductDocument", "to": "Production.Document", "width": 1}, {"from": "Production.ProductDocument", "to": "Production.Product", "width": 1}, {"from": "Production.ProductListPriceHistory", "to": "Production.Product", "width": 1}, {"from": "Production.Product", "to": "Production.UnitMeasure", "width": 1}, {"from": "Production.Product", "to": "Production.ProductModel", "width": 1}, {"from": "Production.Product", "to": "Production.ProductSubcategory", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
